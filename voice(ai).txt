@@ -1,0 +1,78 @@
+#module import
+import SpeechRecognition as sr
+import pyttsx3
+import pywhatkit
+import datetime
+import wikipedia
+#intialize the python text to speech module
+engine=pyttsx3.init()
+#geting the all voices peroperties
+voices=engine.getproperty('voices')
+#changing the voice to male to female
+engine.setproperty('voice',voices[1].id)
+#pyttsx.init().say() represents to speak the text which are in the parameter
+engine.say('im your voice assistance')
+engine.say('how can i help you')
+engine.runandwait()
+lst=[]
+#defining a function for reusability
+def speak(command):
+    engine.say(command)
+    engine.runandwait()
+#recognizer is one of the method in speechrecognition module
+listener=sr.recognizer()
+#here we used exception handling for sometimes microphone might not be work
+try:
+    with sr.microphone as source:
+        print('listening')
+        voice=listener.listen(source)
+        command=listener.recognize_google(voice)
+#if the command contains play then the if block will execute
+	   if 'play' in command:
+            command=command.replace('play','playing')
+            speak(command)
+		  command1=command.replace('playing','')
+            pywhatkit.playonyt(command1)
+#if the command contains time then the elif block will execute
+	   elif 'time' in command:
+		  time=datetime.datetime.now().strftime('%i:%m %p')
+            print(time)
+            speak(time)
+#if the command contains who then the second elif block will be execute
+	   elif 'who' or 'what' or 'tell' or 'info' or 'where' in command:
+		  info=wikipedia.summary(command,1)
+		  print(info)
+            speak(info)
+#if the command contain send then the third elif block will be executed
+	   elif 'send' or 'message' in command:
+            try:
+		      print('<phone number>: to <msg data>: <time in hours>:<time in minutes>:')
+		  command=listener.recognize_google(voice)
+            command=command.replace('to','')
+		  for i in command:
+                lst.append(i)
+		  list1=list.split()
+#sendwhatmsg method is used to send the msg on whatsapp
+#syntax for the sendwhatmsg method is pywhatkit.sendwhatmsg('+91<phno>','<msg>',<hours in time>,<min in time>,<boolean value>,<time in sec to close tab>)  			
+	       pywhatlit.sendwhatmsg(f'+91{list1[0]','list1[1]',lst[2],lst[3],True,5)
+		  print('message sending')
+            except:
+                print('error')
+#if none of the conditions are matched then the elsae block will exexcuted
+        else:
+            print('please say the command again')	       		    	     	 	
+
+#if any error occurs with the microphone exception block will executed
+exception:
+    print('microphone error')
+    talk('microphone error')
+
+
+
+
+
+
+
+
+
+
